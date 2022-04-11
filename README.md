@@ -8,6 +8,8 @@ Download Bandcamp albums and songs in mp3 format
 
 # To Do
 ☐ Download the album cover to directory folder alongside the MP3s 
+
 ☐ Add Mutagen support 
+
 ☐ GUI
 
