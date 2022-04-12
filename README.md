@@ -28,7 +28,7 @@ MUSIC_DIRECTORY = "C:\Music"  # Default directory
 ```powershell 
 cd .\directory the project is in\
 
-python3 bandcampdownload
+python bandcampdownload
 ```
 6) Enter the bandcamp link containing the song or album you want to install
 7) New album or song folder will now be where you set ```MUSIC_DIRECTORY```
