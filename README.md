@@ -1,29 +1,31 @@
 # bandcamp-download
-Download Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. The downsides of downloading mp3s off the internet instead of using a mainstream music player is no more! ID3 Album cover, title, year, album artist... bandcamp-download will take care of it!
+Script which downloads Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. 
+
+The downsides of downloading mp3s off the internet instead of using a mainstream music player is no more! ID3 Album cover, title, year, album artist... bandcamp-download will take care of it!
 
 # The Script in Action
+### Running the script
 ```powershell
 (base) PS C:\coding\bandcampdownload> python main.py
-Enter Bandcamp link: https://mypetflamingo.bandcamp.com/album/hit-vibes
+Enter Bandcamp link: https://wolfgang-amadeus-mozart.bandcamp.com/album/mozarts-piano-sonatas-vol-1
 Getting MP3 links...
-Getting album cover from: https://f4.bcbits.com/img/a0331286933_16.jpg
+Getting album cover from: https://f4.bcbits.com/img/a3050325896_16.jpg
 Downloading...
-Downloading... Hit Vibes 
-Downloading... Have Faith 
-Downloading... Better 
-Downloading... Together
-Downloading... Around
-Downloading... Skylar Spence
-Downloading... Interlude
-Downloading... I Tried
-Downloading... Strawberry Lemonade
-Downloading... Fantasy
-Downloading... Miss You
-Downloading... Outro
-Success!
+Downloading... Piano Sonata No.1 in C-Major, K. 279- I. Allegro 
+Downloading... Piano Sonata No.1 in C-Major, K. 279- II. Andante 
+Downloading... Piano Sonata No.1 in C-Major, K. 279- III. Allegro 
+Downloading... Piano Sonata No.2 in F-Major, K. 280- I. Allegro Assai 
+Downloading... Piano Sonata No.2 in F-Major, K. 280- II. Adagio 
+Downloading... Piano Sonata No.2 in F-Major, K. 280- III. Presto 
+
+...
 ```
+
+### The mp3 files and album cover downloaded
 <img src='images\album.png'></img>
-<img src='images\metadata.png'></img>
+
+### Correct ID3 metadata
+<p align='center'><img src='images\metadata.png' width='500' height='376.08'/>
 
 # Setup
 1) Install the project zip and extract it. Call it bandcampdownload
