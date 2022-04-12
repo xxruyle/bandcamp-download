@@ -23,7 +23,7 @@ pip install -r requirements.txt
 MUSIC_DIRECTORY = "C:\Music"  # Default directory
 ```
 
-5) run `__main__.py`
+5) run `main.py`
 
 ```powershell 
 cd .\directory the project is in\
