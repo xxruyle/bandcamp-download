@@ -1,5 +1,5 @@
 # bandcamp-download
-Download Bandcamp albums and songs in mp3 format.
+Download Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. The downsides of downloading mp3s off the internet instead of using a mainstream music player is no more! ID3 Album cover, title, year, album artist... bandcamp-download will take care of it!
 
 # Setup
 1) Install the project zip
@@ -36,15 +36,17 @@ python main.py
 
 ✅ Fix how album names with illegal characters cannot be added to the directory 
 
-☐ Add Mutagen support 
+✅ Add Mutagen support 
+
+✅ requirements.txt
 
 ☐ Error handling 
 
-☐ exe file 
+☐ PyPi
 
 ☐ GUI
 
 # Credits
 - Made for educational purposes 
 
-- Remember to support artists 
+- Support bandcamp artists!
