@@ -11,12 +11,12 @@ class linkfinder:
         self.link = link
         self.album_length = None 
 
-    def get_html(self):
+    def get_html(self):  # gets the enitre html of the page 
         response = requests.get(self.link).content 
         soup = BeautifulSoup(response, 'html.parser')
         return soup
 
-    def get_script(self):
+    def get_script(self):  # gets the text from <script>s
         response = requests.get(self.link)
         url = response.content
         soup = BeautifulSoup(url, 'html.parser')
@@ -133,9 +133,9 @@ class downloader(meta_info):
 
             meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
             meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
-            meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self) ]) #album composer
-            meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self) ]) #contributing artist 
-            meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self) ]) #album artist
+            meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self)]) #album composer
+            meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
+            meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
             meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
             meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
             
