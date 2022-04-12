@@ -3,8 +3,9 @@ import requests
 import urllib.request
 import os 
 
-# finds the links which contain bandcamp mp3s
+
 class linkfinder:  
+    '''finds the links which contain bandcamp mp3s'''
     def __init__(self, link):
         self.link = link
         self.album_length = None 
@@ -43,14 +44,21 @@ class linkfinder:
 
         return link_list
         
-# finds the metadata info for songs, album cover, arist name, release date
+
 class meta_info(linkfinder):  
+    '''finds the metadata info for songs, album cover, arist name, release date'''
     def __init__(self, link):
         super().__init__(link)
         self.soup = linkfinder.get_html(self)
 
+    def badchar(self, string):  # Removes illegal characters 
+        for c in '\/:*?"<>|':
+            string = string.replace(c,'')
+        return string;
+
     def get_title(self):  # gets the album or song title 
-        title = self.soup.find('h2', class_="trackTitle").text.strip()
+        init_title = self.soup.find('h2', class_="trackTitle").text.strip()
+        title = self.badchar(init_title)
         return title 
 
     def get_artist(self):  # Gets the artist's name  
@@ -69,7 +77,8 @@ class meta_info(linkfinder):
         container = self.soup.find_all('tr', class_="track_row_view linked")
         j = 1
         for i in container:
-            track = i.find('span', class_='track-title').text.strip()
+            init_track = i.find('span', class_='track-title').text.strip()
+            track = self.badchar(init_track)  # removes potential bad characters from track name 
             trackinfo[track] = j
             j += 1
         return trackinfo
@@ -81,8 +90,9 @@ class meta_info(linkfinder):
         return year # This returns the year but we can also return the date if we want 
 
  
-# downloads the mp3 of every link in the song_list 
+
 class downloader(meta_info):  
+    '''downloads the mp3 of every link in the song_list '''
     def __init__(self, link, directory):
         super().__init__(link)
         self.directory = f'{directory}\{meta_info.get_title(self)}'
@@ -96,20 +106,19 @@ class downloader(meta_info):
             print(f'{self.directory} already exists ')
 
         print("Downloading...")
-        if len(self.download_list) == 1:
-            single_track = self.download_list[0].strip('"')
-            response = requests.get(single_track)
-            with open(f'{self.directory}\{meta_info.get_title(self)}.mp3', 'wb') as f:  # installing the song  to the intended directory 
+        for i in range(len(self.download_list)):
+            track = self.download_list[i].strip('"')
+            response = requests.get(track)
+            print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
+            with open(f'{self.directory}\{list(meta_info.get_trackname(self))[i]}.mp3', 'wb') as f:  # installing the song  to the intended directory 
                 f.write(response.content)
-        else:
-            for i in range(len(self.download_list)):
-                track = self.download_list[i].strip('"')
-                response = requests.get(track)
-                print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
-                with open(f'{self.directory}\{list(meta_info.get_trackname(self))[i]}.mp3', 'wb') as f:  # installing the song  to the intended directory 
-                    f.write(response.content)
-        print("Success!")
 
+        print(f'Getting album cover from: {meta_info.get_cover(self)}')
+        with open(f'{self.directory}\cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
+            cover_response = requests.get(meta_info.get_cover(self))
+            f.write(cover_response.content)
+
+        print("Success!")
 
 
 
