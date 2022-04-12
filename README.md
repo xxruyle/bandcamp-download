@@ -11,6 +11,8 @@ MUSIC_DIRECTORY = "C:\Music"
 ```
 5) cd into where you you installed the project 
 ```python 
+cd .\yourdirectory\
+
 python main.py 
 ```
 6) Enter the bandcamp link containing the song or album you want to install
