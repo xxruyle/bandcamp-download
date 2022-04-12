@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
+from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCOM, TOPE
 import requests 
 import os 
+
 
 
 class linkfinder:  
@@ -52,7 +54,7 @@ class meta_info(linkfinder):
 
     def badchar(self, string):  # Removes illegal characters 
         for c in '\/:*?"<>|':
-            string = string.replace(c,'')
+            string = string.replace(c,'-')
         return string;
 
     def get_title(self):  # gets the album or song title 
@@ -62,7 +64,8 @@ class meta_info(linkfinder):
 
     def get_artist(self):  # Gets the artist's name  
         container = self.soup.find('div', attrs={"id": "name-section"})
-        artist = container.find('a').text
+        init_artist = container.find('a').text
+        artist = self.badchar(init_artist)
         return artist 
 
     def get_cover(self):  # Gets the image link of the album cover 
@@ -95,27 +98,58 @@ class downloader(meta_info):
     def __init__(self, link, directory):
         super().__init__(link)
         self.directory = f'{directory}\{meta_info.get_title(self)}'
+        print("Getting MP3 links...")
         self.download_list = linkfinder.get_links(self)
         
 
     def download(self):
+        '''Downloads the mp3 files to the directory as well as adds metadata to each mp3 file'''
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
         else:
             print(f'{self.directory} already exists ')
 
-        print("Downloading...")
-        for i in range(len(self.download_list)):
-            track = self.download_list[i].strip('"')
-            response = requests.get(track)
-            print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
-            with open(f'{self.directory}\{list(meta_info.get_trackname(self))[i]}.mp3', 'wb') as f:  # installing the song  to the intended directory 
-                f.write(response.content)
-
         print(f'Getting album cover from: {meta_info.get_cover(self)}')
         with open(f'{self.directory}\cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
             cover_response = requests.get(meta_info.get_cover(self))
             f.write(cover_response.content)
+
+
+        print("Downloading...")
+        for i in range(len(self.download_list)):
+            filepath = f"{self.directory}\{list(meta_info.get_trackname(self))[i]}"
+            filename = f"{filepath}.mp3"
+            track = self.download_list[i].strip('"')
+            response = requests.get(track)
+            print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
+            with open(filename, 'wb') as f:  # installing the song  to the intended directory 
+                f.write(response.content)
+
+            # Adding mp3 metadata to the file 
+            try:
+                meta = ID3(filename)
+            except ID3NoHeaderError:
+                meta = ID3()
+
+            meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
+            meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
+            meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self) ]) #album composer
+            meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self) ]) #contributing artist 
+            meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self) ]) #album artist
+            meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
+            meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
+            
+            meta.save(filename)
+
+            with open(f'{self.directory}\cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
+                meta['APIC'] = APIC(
+                      encoding=3,
+                      mime='image/jpeg',
+                      type=3, desc=u'Cover',
+                      data=albumart.read()
+                    )
+
+            meta.save(filename)
 
         print("Success!")
 
