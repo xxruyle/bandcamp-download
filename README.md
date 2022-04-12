@@ -5,7 +5,7 @@ Download Bandcamp albums and songs in mp3 format.
 1) Python 3.8.8 or higher
 2) Latest version of Beautifulsoup and requests
 3) Install the project zip
-4) Set your preferred directory where you want your music installed in the environment file 
+4) Set your preferred directory where you want your music installed in the pathdir.py  
 ```python
 MUSIC_DIRECTORY = "C:\Music" 
 ```
