@@ -1,0 +1,1 @@
+PATH = "C:\Music"  # default path 
