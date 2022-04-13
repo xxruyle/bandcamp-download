@@ -88,8 +88,14 @@ class meta_info(linkfinder):
     def get_release(self):  # Gets the year the album/track was released 
         string = self.soup.find('div', class_="tralbumData tralbum-credits").text.strip()
         date = string.replace('released ', '')
-        year = date[-4:]
-        return year # This returns the year but we can also return the date if we want 
+        year = ''
+        for l in date:
+            if l.isdigit():
+                year += l
+        if len(year) == 6:
+            return year[2:]
+        elif len(year) == 5:
+            return year[1:]
 
  
 
