@@ -60,13 +60,15 @@ class meta_info(linkfinder):
     def get_title(self):  # gets the album or song title 
         init_title = self.soup.find('h2', class_="trackTitle").text.strip()
         title = self.badchar(init_title)
-        return title 
+        final_title = str(title.encode('ascii', 'ignore')) # returns the non ignored foreign characters 
+        return final_title[2:-1]  # Grabs the needed part of the string
 
     def get_artist(self):  # Gets the artist's name  
         container = self.soup.find('div', attrs={"id": "name-section"})
         init_artist = container.find('a').text
         artist = self.badchar(init_artist)
-        return artist 
+        final_artist = str(artist.encode('ascii', 'ignore')) # returns the non ignored foreign characters 
+        return final_artist[2:-1] 
 
     def get_cover(self):  # Gets the image link of the album cover 
         container = self.soup.find('a', class_="popupImage")
@@ -81,21 +83,17 @@ class meta_info(linkfinder):
         for i in container:
             init_track = i.find('span', class_='track-title').text.strip()
             track = self.badchar(init_track)  # removes potential bad characters from track name 
-            trackinfo[track] = j
+            final_track = str(track.encode('ascii', 'ignore'))  
+            trackinfo[final_track[2:-1]] = j
             j += 1
         return trackinfo
 
     def get_release(self):  # Gets the year the album/track was released 
         string = self.soup.find('div', class_="tralbumData tralbum-credits").text.strip()
         date = string.replace('released ', '')
-        year = ''
-        for l in date:
-            if l.isdigit():
-                year += l
-        if len(year) == 6:
-            return year[2:]
-        elif len(year) == 5:
-            return year[1:]
+        first = date.split('\n')[0]
+        year = first.split(', ')[1]
+        return year # returning the year 
 
  
 
