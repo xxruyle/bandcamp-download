@@ -52,23 +52,30 @@ class meta_info(linkfinder):
         super().__init__(link)
         self.soup = linkfinder.get_html(self)
 
-    def badchar(self, string):  # Removes illegal characters 
+    def badchar(self, string):  # Removes illegal filename characters 
         for c in '\/:*?"<>|':
             string = string.replace(c,'-')
         return string;
 
+    def cleanString(self, string):  # removes illegal unicode characters from track name
+        list = []
+        for letter in string:
+            if letter.isalnum() or ' ':
+                list.append(letter)
+            else:
+                list.append("-")
+        return ''.join(list)
+
     def get_title(self):  # gets the album or song title 
         init_title = self.soup.find('h2', class_="trackTitle").text.strip()
         title = self.badchar(init_title)
-        final_title = str(title.encode('ascii', 'ignore')) # returns the non ignored foreign characters 
-        return final_title[2:-1]  # Grabs the needed part of the string
+        return self.cleanString(title)
 
     def get_artist(self):  # Gets the artist's name  
         container = self.soup.find('div', attrs={"id": "name-section"})
         init_artist = container.find('a').text
         artist = self.badchar(init_artist)
-        final_artist = str(artist.encode('ascii', 'ignore')) # returns the non ignored foreign characters 
-        return final_artist[2:-1] 
+        return self.cleanString(artist)
 
     def get_cover(self):  # Gets the image link of the album cover 
         container = self.soup.find('a', class_="popupImage")
@@ -82,9 +89,8 @@ class meta_info(linkfinder):
         j = 1
         for i in container:
             init_track = i.find('span', class_='track-title').text.strip()
-            track = self.badchar(init_track)  # removes potential bad characters from track name 
-            final_track = str(track.encode('ascii', 'ignore'))  
-            trackinfo[final_track[2:-1]] = j
+            track = self.badchar(init_track) 
+            trackinfo[self.cleanString(track)] = j
             j += 1
         return trackinfo
 
