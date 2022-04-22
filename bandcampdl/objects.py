@@ -60,7 +60,7 @@ class meta_info(linkfinder):
     def cleanString(self, string):  # removes illegal unicode characters from track name
         list = []
         for letter in string:
-            if letter.isalnum() or ' ':
+            if letter.isalnum() or letter == ' ' or letter == '(' or letter == ')':
                 list.append(letter)
             else:
                 list.append("-")
