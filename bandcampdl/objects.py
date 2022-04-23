@@ -68,10 +68,10 @@ class meta_info(linkfinder):
     def cleanString(self, string):  # removes illegal unicode characters from track name
         list = []
         for letter in string:
-            if letter.isalnum() or letter == ' ' or letter == '(' or letter == ')':
+            if letter.isalnum() or letter == ' ' or letter == '(' or letter == ')' or letter == "," or letter == ".":
                 list.append(letter)
             else:
-                list.append("-")
+                list.append("")
         return ''.join(list)
 
     def get_title(self):  # gets the album or song title 
@@ -140,7 +140,7 @@ class downloader(meta_info):
             f.write(cover_response.content)
 
 
-        print("Downloading...")
+        print(f"Downloading Album: {meta_info.get_title(self)}")
         for i in range(len(self.download_list)):
             filepath = f"{self.directory}\{list(meta_info.get_trackname(self))[i]}"
             filename = f"{filepath}.mp3"
@@ -159,7 +159,7 @@ class downloader(meta_info):
             meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
             meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
             meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self)]) #album composer
-            meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre composer
+            meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
             meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
             meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
             meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
