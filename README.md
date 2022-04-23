@@ -68,11 +68,7 @@ python main.py
 
 ✅ requirements.txt
 
-☐ Error handling 
-
-☐ PyPi
-
-☐ GUI
+✅ Error handling 
 
 # Credits
 - Made for educational purposes 

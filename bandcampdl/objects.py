@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCOM, TOPE
+from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCOM, TCON
 import requests 
 import os 
 import sys 
@@ -113,6 +113,9 @@ class meta_info(linkfinder):
         year = first.split(', ')[1]
         return year # returning the year 
 
+    def get_genre(self): # Gets the first genre listed on bandcamp
+        genre = self.soup.find('a', class_='tag').text.capitalize()
+        return genre
  
 
 class downloader(meta_info):  
@@ -156,6 +159,7 @@ class downloader(meta_info):
             meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
             meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
             meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self)]) #album composer
+            meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre composer
             meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
             meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
             meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
