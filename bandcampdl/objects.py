@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCOM, TOPE
 import requests 
 import os 
-
+import sys 
 
 
 class linkfinder:  
@@ -12,16 +12,24 @@ class linkfinder:
         self.album_length = None 
 
     def get_html(self):  # gets the enitre html of the page 
-        response = requests.get(self.link).content 
-        soup = BeautifulSoup(response, 'html.parser')
-        return soup
+        try:
+            response = requests.get(self.link).content 
+            soup = BeautifulSoup(response, 'html.parser')
+            return soup
+        except requests.exceptions.MissingSchema:
+            print("Not a valid link")
+            sys.exit()
 
     def get_script(self):  # gets the text from <script>s
-        response = requests.get(self.link)
-        url = response.content
-        soup = BeautifulSoup(url, 'html.parser')
-        links = soup.find_all("script")
-        return links 
+        try:
+            response = requests.get(self.link)
+            url = response.content
+            soup = BeautifulSoup(url, 'html.parser')
+            links = soup.find_all("script")
+            return links 
+        except requests.exceptions.MissingSchema:
+            print("Not a valid link")
+            sys.exit()
 
     def get_links(self):
         link_list = []  # list of all the song links 
@@ -67,9 +75,13 @@ class meta_info(linkfinder):
         return ''.join(list)
 
     def get_title(self):  # gets the album or song title 
-        init_title = self.soup.find('h2', class_="trackTitle").text.strip()
-        title = self.badchar(init_title)
-        return self.cleanString(title)
+        try:
+            init_title = self.soup.find('h2', class_="trackTitle").text.strip()
+            title = self.badchar(init_title)
+            return self.cleanString(title)
+        except AttributeError:
+            print("Not a valid bandcamp link")
+            sys.exit()
 
     def get_artist(self):  # Gets the artist's name  
         container = self.soup.find('div', attrs={"id": "name-section"})
