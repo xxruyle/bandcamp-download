@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCOM, TCON
+from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCON
 import requests 
 import os 
 import sys 
@@ -22,9 +22,8 @@ class linkfinder:
 
     def get_script(self):  # gets the text from <script>s
         try:
-            response = requests.get(self.link)
-            url = response.content
-            soup = BeautifulSoup(url, 'html.parser')
+            response = requests.get(self.link).content
+            soup = BeautifulSoup(response, 'html.parser')
             links = soup.find_all("script")
             return links 
         except requests.exceptions.MissingSchema:
@@ -158,7 +157,6 @@ class downloader(meta_info):
 
             meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
             meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
-            meta['TCOM'] = TCOM(encoding=3, text=[meta_info.get_artist(self)]) #album composer
             meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
             meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
             meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
@@ -178,6 +176,7 @@ class downloader(meta_info):
             meta.save(filename)
 
         print("Success!")
+
 
 
 

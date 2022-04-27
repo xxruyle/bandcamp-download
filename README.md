@@ -70,6 +70,11 @@ python main.py
 
 ✅ Error handling 
 
+- [ ] Refactoring
+  
+- [ ] PyQT
+
+
 # Credits
 - Made for educational purposes 
 
