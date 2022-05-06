@@ -1,7 +1,8 @@
 # bandcamp-download
-Script which downloads Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. 
+Simple script which downloads Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. 
 
-The downsides of downloading mp3s off the internet instead of using a mainstream music player is no more! ID3 Album cover, title, year, album artist... bandcamp-download will take care of it!
+Uses <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a> to instantly upload songs to Youtube Music after downloading.
+
 
 # The Script in Action
 ### Running the script
@@ -17,7 +18,7 @@ Downloading... Piano Sonata No.1 in C-Major, K. 279- III. Allegro
 Downloading... Piano Sonata No.2 in F-Major, K. 280- I. Allegro Assai 
 Downloading... Piano Sonata No.2 in F-Major, K. 280- II. Adagio 
 Downloading... Piano Sonata No.2 in F-Major, K. 280- III. Presto 
-
+Success!
 ...
 ```
 
@@ -27,17 +28,22 @@ Downloading... Piano Sonata No.2 in F-Major, K. 280- III. Presto
 ### Correct ID3 metadata
 <p align='center'><img src='images\metadata.png' width='500' height='376.08'/>
 
-# Setup
-1) Install the project zip and extract it. Call it bandcampdownload
-2) Create a virtualenv if needed
-
+### Uploading to YoutTube Music using <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a>
 ```powershell
-py -m venv env
-
-.\env\Scripts\activate
+Uploading... Piano Sonata No.1 in C-Major, K. 279- I. Allegro 
+Uploading... Piano Sonata No.1 in C-Major, K. 279- II. Andante 
+Uploading... Piano Sonata No.1 in C-Major, K. 279- III. Allegro 
+Uploading... Piano Sonata No.2 in F-Major, K. 280- I. Allegro Assai 
+Uploading... Piano Sonata No.2 in F-Major, K. 280- II. Adagio 
+Uploading... Piano Sonata No.2 in F-Major, K. 280- III. Presto 
+Success!
 ```
 
-3) Go to the project directory and enter:
+# Setup
+1) Install the project zip 
+2) Create a virtualenv if needed
+
+3) Install the requirements in the project directory
 
 ```powershell
 pip install -r requirements.txt
@@ -49,15 +55,20 @@ pip install -r requirements.txt
 MUSIC_DIRECTORY = "C:\Music"  # Default directory
 ```
 
-5) run `main.py`
+5) run `main.py` and enter a bandcamp link 
 
 ```powershell 
-cd .\bandcampdownload\
-
 python main.py
 ```
-6) Enter the bandcamp link containing the song or album you want to install
-7) New album or song folder will now be where you set ```MUSIC_DIRECTORY```
+
+6) New album or song folder will now be where you set ```MUSIC_DIRECTORY```
+
+# Uploading to Youtube Music 
+1) Follow the setup steps to setup using the <a href="https://ytmusicapi.readthedocs.io/en/latest/setup.html">ytmusicapi documentation</a>
+  
+2) Enter the `headers_auth.json` path into YTMusic class in `youtube_music.py` 
+
+3) Use the `upload_music()` method in `youtube_music.py`
 
 # To Do
 ✅ Download the album cover to directory folder alongside the MP3s 
@@ -70,12 +81,15 @@ python main.py
 
 ✅ Error handling 
 
+✅ YouTube Music Upload using ytmusicapi 
+
 - [ ] Refactoring
   
-- [ ] PyQT
+
 
 
 # Credits
+- [ytmusicapi](https://github.com/sigma67/ytmusicapi)
 - Made for educational purposes 
 
 - Support bandcamp artists!

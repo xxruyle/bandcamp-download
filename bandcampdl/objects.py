@@ -121,7 +121,7 @@ class downloader(meta_info):
     '''downloads the mp3 of every link in the song_list '''
     def __init__(self, link, directory):
         super().__init__(link)
-        self.directory = f'{directory}\{meta_info.get_title(self)}'
+        self.directory = f'{directory}/{meta_info.get_title(self)}'
         print("Getting MP3 links...")
         self.download_list = linkfinder.get_links(self)
         
@@ -134,14 +134,14 @@ class downloader(meta_info):
             print(f'{self.directory} already exists ')
 
         print(f'Getting album cover from: {meta_info.get_cover(self)}')
-        with open(f'{self.directory}\cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
+        with open(f'{self.directory}/cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
             cover_response = requests.get(meta_info.get_cover(self))
             f.write(cover_response.content)
 
 
         print(f"Downloading Album: {meta_info.get_title(self)}")
         for i in range(len(self.download_list)):
-            filepath = f"{self.directory}\{list(meta_info.get_trackname(self))[i]}"
+            filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
             filename = f"{filepath}.mp3"
             track = self.download_list[i].strip('"')
             response = requests.get(track)
@@ -165,7 +165,7 @@ class downloader(meta_info):
             
             meta.save(filename)
 
-            with open(f'{self.directory}\cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
+            with open(f'{self.directory}/cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
                 meta['APIC'] = APIC(
                       encoding=3,
                       mime='image/jpeg',
@@ -176,6 +176,8 @@ class downloader(meta_info):
             meta.save(filename)
 
         print("Success!")
+
+        return self.directory # returns the music album folder so we access the mp3 files 
 
 
 
