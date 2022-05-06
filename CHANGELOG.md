@@ -11,3 +11,6 @@ YouTube music upload support
 
 - ytmusicapi support
 - upload_songs() method in youtube_music.py 
+
+## v1.0.2 
+- argparse support

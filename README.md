@@ -55,10 +55,18 @@ pip install -r requirements.txt
 MUSIC_DIRECTORY = "C:\Music"  # Default directory
 ```
 
-5) run `main.py` and enter a bandcamp link 
+1) run `python main.py [--upload] [--no-upload] link` 
 
 ```powershell 
-python main.py
+usage: main.py [-h] [--upload] [--no-upload] link
+
+positional arguments:
+  link         Enter a valid bandcamp album or song link
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --upload     Uploads files to YT Music
+  --no-upload  Does not upload YT Music (default)
 ```
 
 6) New album or song folder will now be where you set ```MUSIC_DIRECTORY```
