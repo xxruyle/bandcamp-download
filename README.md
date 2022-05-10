@@ -55,7 +55,7 @@ pip install -r requirements.txt
 MUSIC_DIRECTORY = "C:\Music"  # Default directory
 ```
 
-1) run `python main.py [--upload] [--no-upload] link` 
+1) run `python main.py [-h] [-u] link` 
 
 ```powershell 
 usage: main.py [-h] [-u] link

@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCON
+from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCON, TPUB
 import requests 
 import os 
 import sys 
@@ -116,6 +116,10 @@ class meta_info(linkfinder):
         genre = self.soup.find('a', class_='tag').text.capitalize()
         return genre
  
+    def get_publisher(self):  # Gets the publisher 
+        label = self.soup.find('p', attrs={"id": "band-name-location"})
+        publisher = label.find("span", class_="title").text
+        return publisher
 
 class downloader(meta_info):  
     '''downloads the mp3 of every link in the song_list '''
@@ -162,6 +166,7 @@ class downloader(meta_info):
             meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
             meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
             meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
+            meta['TPUB'] = TPUB(encoding=3, text=[meta_info.get_publisher(self)]) # publisher/label
             
             meta.save(filename)
 
@@ -175,7 +180,7 @@ class downloader(meta_info):
 
             meta.save(filename)
 
-        print("Success!")
+        print("Download Success!")
 
         return self.directory # returns the music album folder so we access the mp3 files 
 

@@ -14,7 +14,7 @@ class YTM_upload():
                 upload_status = str(self.ytmusic.upload_song(f"{album_folder}/{song}"))
                 print(song + " Upload Result: " + upload_status)
 
-                #If a response error occurs, the script will wait 15 seconds
+                #If a response error occurs, the script will wait 20 seconds
                 if upload_status == "<Response [503]>" or upload_status == "<Response [409]>":
                     upload_error = True 
                     while upload_error:
@@ -28,7 +28,5 @@ class YTM_upload():
         # rechecking to see if every song was uploaded       
         #browse_id = self.ytmusic.get_library_upload_albums()[0]["browseId"] 
         #self.ytmusic.get_library_upload_album(browse_id)["tracks"]
-
-
         print("Upload Success!")
 

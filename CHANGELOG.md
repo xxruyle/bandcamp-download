@@ -5,6 +5,7 @@
 
 - argparse support
 - Fixed an <a href="https://github.com/sigma67/ytmusicapi/issues/6">upload issue</a> where uploading albums with more than 13 songs caused a response error. 
+- Added publisher metadata with the get_publisher() method in meta_info
 
 ## v1.0.1 - May 5, 2022
 #### YouTube music upload support

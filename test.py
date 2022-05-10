@@ -9,5 +9,4 @@ def badchar(self, string):  # Removes illegal filename characters
         return string;
 
 
-ytmusic = YTMusic("headers_auth.json")
 
