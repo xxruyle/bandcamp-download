@@ -28,8 +28,7 @@ def main(link):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "Download bandcamp albums")
     parser.add_argument("link", metavar="link", type=str, help = "Enter a valid bandcamp album or song link")
-    parser.add_argument("--upload", action="store_true", help="Uploads files to YT Music")
-    parser.add_argument("--no-upload", action="store_false", help="Does not upload YT Music (default)")
+    parser.add_argument("-u", "--upload", action="store_true", help="Uploads files to YT Music")
     parser.set_defaults(feature=False)
     args = parser.parse_args()
     main(args.link)

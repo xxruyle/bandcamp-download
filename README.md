@@ -77,6 +77,7 @@ optional arguments:
 2) Enter the `headers_auth.json` path into YTMusic class in `youtube_music.py` 
 
 3) Use the `upload_music()` method in `youtube_music.py`
+  
 
 # To Do
 ✅ Download the album cover to directory folder alongside the MP3s 
