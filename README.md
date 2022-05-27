@@ -49,7 +49,7 @@ Supports Python 3.8.8 or higher
 pip install -r requirements.txt
 ```
 
-4) Set your preferred directory where you want your music installed in  `.\bandcampdl\pathdir.py`  
+1) Set your preferred directory path where you want your music installed to  `.\bandcampdl\pathdir.py`  
 
 ```python
 MUSIC_DIRECTORY = "C:\Music"  # Default directory
@@ -75,11 +75,16 @@ optional arguments:
 # Uploading to Youtube Music 
 1) Follow the setup steps using the <a href="https://ytmusicapi.readthedocs.io/en/latest/setup.html">ytmusicapi documentation</a> to create a `headers_auth.json`
   
-2) Enter the newly created `headers_auth.json` path into YTMusic class in `youtube_music.py` 
+2) Place the newly created `headers_auth.json` in the directory folder 
+   
+3) Set the directory path to headers_auth.json in `.\bandcampdl\pathdir.py`  
+```python
+HEADERS_AUTH = "\bandcampdownload\headers_auth.json"
+```
   
-3) Use the `--upload` argument when running `python main.py`
+4) Use the `--upload` argument when running `python main.py`
 
-# Credits
-- Yes, bandcamp allows downloading <a href="https://get.bandcamp.help/hc/en-us/articles/360007902173-I-heard-you-can-steal-music-on-Bandcamp-What-are-you-doing-about-this-">the underlying MP3-128 files</a>
+# Further Notes
+- Yes, bandcamp allows people to download <a href="https://get.bandcamp.help/hc/en-us/articles/360007902173-I-heard-you-can-steal-music-on-Bandcamp-What-are-you-doing-about-this-">the underlying MP3-128 files</a>
 
 - Support bandcamp artists!

@@ -73,7 +73,10 @@ class meta_info(linkfinder):
                 list.append("")
         return ''.join(list)
 
-    def get_title(self):  # gets the album or song title 
+    def get_title(self):  
+        '''
+        Gets the album or song title 
+        '''
         try:
             init_title = self.soup.find('h2', class_="trackTitle").text.strip()
             title = self.badchar(init_title)
@@ -82,20 +85,32 @@ class meta_info(linkfinder):
             print("Not a valid bandcamp link")
             sys.exit()
 
-    def get_artist(self):  # Gets the artist's name  
+    def get_artist(self):  
+        '''
+        Gets the artist's name  
+        '''
         container = self.soup.find('div', attrs={"id": "name-section"})
         init_artist = container.find('a').text
         artist = self.badchar(init_artist)
         return self.cleanString(artist)
 
-    def get_cover(self):  # Gets the image link of the album cover 
+    def get_cover(self): 
+        '''
+        Gets the image link of the album cover
+        ''' 
         container = self.soup.find('a', class_="popupImage")
         image = container.find('img')
         cover = image.get('src')
         return cover 
 
-    def get_trackname(self):  # Gets the names of the track and the track number in a dictionary 
-        trackinfo = {}  # "Name" : "Track Number"
+    def get_trackname(self):  
+        '''
+        Gets the names of the track and the track number in a dictionary 
+
+        :example:
+        "Name" : "Track Number"
+        '''
+        trackinfo = {}  
         container = self.soup.find_all('tr', class_="track_row_view linked")
         j = 1
         for i in container:
@@ -105,18 +120,29 @@ class meta_info(linkfinder):
             j += 1
         return trackinfo
 
-    def get_release(self):  # Gets the year the album/track was released 
+    def get_release(self):  
+        '''
+        Gets the year the album/track was released
+        :returns:
+        year 
+        ''' 
         string = self.soup.find('div', class_="tralbumData tralbum-credits").text.strip()
         date = string.replace('released ', '')
         first = date.split('\n')[0]
         year = first.split(', ')[1]
-        return year # returning the year 
+        return year 
 
-    def get_genre(self): # Gets the first genre listed on bandcamp
+    def get_genre(self): 
+        '''
+        Gets the first genre listed on bandcamp
+        '''
         genre = self.soup.find('a', class_='tag').text.capitalize()
         return genre
  
-    def get_publisher(self):  # Gets the publisher 
+    def get_publisher(self):  
+        '''
+        Gets the publisher 
+        '''
         label = self.soup.find('p', attrs={"id": "band-name-location"})
         publisher = label.find("span", class_="title").text
         return publisher
@@ -134,53 +160,55 @@ class downloader(meta_info):
         '''Downloads the mp3 files to the directory as well as adds metadata to each mp3 file'''
         if not os.path.exists(self.directory):
             os.makedirs(self.directory)
+            print(f'Getting album cover from: {meta_info.get_cover(self)}')
+            with open(f'{self.directory}/cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
+                cover_response = requests.get(meta_info.get_cover(self))
+                f.write(cover_response.content)
+
+
+            print(f"Downloading Album: {meta_info.get_title(self)}")
+            for i in range(len(self.download_list)):
+                filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
+                filename = f"{filepath}.mp3"
+                track = self.download_list[i].strip('"')
+                response = requests.get(track)
+                print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
+
+                # installing the song  to the intended directory 
+                with open(filename, 'wb') as f:  
+                    f.write(response.content)
+
+                # Adding mp3 metadata to the file 
+                try:
+                    meta = ID3(filename)
+                except ID3NoHeaderError:
+                    meta = ID3()
+
+                meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
+                meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
+                meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
+                meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
+                meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
+                meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
+                meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
+                meta['TPUB'] = TPUB(encoding=3, text=[meta_info.get_publisher(self)]) # publisher/label
+
+                meta.save(filename)
+
+                with open(f'{self.directory}/cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
+                    meta['APIC'] = APIC(
+                          encoding=3,
+                          mime='image/jpeg',
+                          type=3, desc=u'Cover',
+                          data=albumart.read()
+                        )
+
+                meta.save(filename)
+
+            print("Download Success!")
+
         else:
             print(f'{self.directory} already exists ')
-
-        print(f'Getting album cover from: {meta_info.get_cover(self)}')
-        with open(f'{self.directory}/cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
-            cover_response = requests.get(meta_info.get_cover(self))
-            f.write(cover_response.content)
-
-
-        print(f"Downloading Album: {meta_info.get_title(self)}")
-        for i in range(len(self.download_list)):
-            filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
-            filename = f"{filepath}.mp3"
-            track = self.download_list[i].strip('"')
-            response = requests.get(track)
-            print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
-            with open(filename, 'wb') as f:  # installing the song  to the intended directory 
-                f.write(response.content)
-
-            # Adding mp3 metadata to the file 
-            try:
-                meta = ID3(filename)
-            except ID3NoHeaderError:
-                meta = ID3()
-
-            meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
-            meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
-            meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
-            meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
-            meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
-            meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
-            meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
-            meta['TPUB'] = TPUB(encoding=3, text=[meta_info.get_publisher(self)]) # publisher/label
-            
-            meta.save(filename)
-
-            with open(f'{self.directory}/cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
-                meta['APIC'] = APIC(
-                      encoding=3,
-                      mime='image/jpeg',
-                      type=3, desc=u'Cover',
-                      data=albumart.read()
-                    )
-
-            meta.save(filename)
-
-        print("Download Success!")
 
         return self.directory # returns the music album folder so we access the mp3 files 
 
