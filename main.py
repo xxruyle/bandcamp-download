@@ -21,7 +21,7 @@ def main(link):
 
     # Remove this if you do not want to upload songs to YT Music 
     if args.upload:
-        u1 = bandcampdl.YTM_upload()
+        u1 = bandcampdl.YTM_upload(bandcampdl.HEADERS_AUTH)
         u1.upload_songs(album_folder)
     
 

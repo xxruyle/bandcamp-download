@@ -77,12 +77,8 @@ optional arguments:
   
 2) Place the newly created `headers_auth.json` in the directory folder 
    
-3) Set the directory path to headers_auth.json in `.\bandcampdl\pathdir.py`  
-```python
-HEADERS_AUTH = "\bandcampdownload\headers_auth.json"
-```
   
-4) Use the `--upload` argument when running `python main.py`
+3) Use the `--upload` argument when running `python main.py`
 
 # Further Notes
 - Yes, bandcamp allows people to download <a href="https://get.bandcamp.help/hc/en-us/articles/360007902173-I-heard-you-can-steal-music-on-Bandcamp-What-are-you-doing-about-this-">the underlying MP3-128 files</a>

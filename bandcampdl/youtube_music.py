@@ -1,5 +1,4 @@
 from ytmusicapi import YTMusic
-from pathdir import HEADERS_AUTH
 
 from os import listdir 
 
@@ -8,9 +7,10 @@ import time
 class YTM_upload():
     '''
     Class which deals with YT Music api uploads
+    :param headers_path: the path to the headers_auth.json required to initialize ytmusicapi
     '''
-    def __init__(self):
-        self.ytmusic = YTMusic(HEADERS_AUTH)  # Place the path to your headers_auth.json here
+    def __init__(self, headers_path):
+        self.ytmusic = YTMusic(headers_path)  # Place the path to your headers_auth.json here
 
     def upload_songs(self, album_folder):
         '''
