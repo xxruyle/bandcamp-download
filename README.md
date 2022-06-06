@@ -39,9 +39,8 @@ Upload Success!
 Supports Python 3.8.8 or higher
 
 1) Install the project zip 
-2) Create a virtualenv if needed
 
-3) Install the requirements in the project directory
+2) Install the requirements in the project directory
 
 ```powershell
 pip install -r requirements.txt
