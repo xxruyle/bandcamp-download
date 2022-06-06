@@ -1,7 +1,5 @@
 # bandcamp-download
-Simple script which downloads Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. 
-
-Script also supports  <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a> where you can instantly upload songs to Youtube Music after downloading.
+Simple python script which downloads Bandcamp albums and songs in mp3 format. MP3 Files come with ID3 metadata. 
 
 
 # The Script in Action
@@ -72,7 +70,9 @@ optional arguments:
 
 6) New album or song folder will now be where you set ```MUSIC_DIRECTORY```
 
-# Uploading to Youtube Music 
+# Uploading to Youtube Music
+The script supports  <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a> where you can instantly upload songs to Youtube Music after downloading.
+
 1) Follow the setup steps using the <a href="https://ytmusicapi.readthedocs.io/en/latest/setup.html">ytmusicapi documentation</a> to create a `headers_auth.json`
   
 2) Place the newly created `headers_auth.json` in the directory folder 
