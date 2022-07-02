@@ -1,5 +1,9 @@
 # Change Log 
 
+## v1.0.3 
+#### Unicode 
+- Fixed problem where extra whitespaces would appear in folder names 
+- 
 ## v1.0.2 
 #### Argparse
 

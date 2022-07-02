@@ -59,19 +59,23 @@ class meta_info(linkfinder):
         super().__init__(link)
         self.soup = linkfinder.get_html(self)
 
-    def badchar(self, string):  # Removes illegal filename characters 
+
+    # Removes illegal filename characters
+    def badchar(self, string):   
         for c in '\/:*?"<>|':
             string = string.replace(c,'-')
         return string;
 
-    def cleanString(self, string):  # removes illegal unicode characters from track name
+
+    # removes illegal unicode characters from track name
+    def cleanString(self, string):  
         list = []
         for letter in string:
             if letter.isalnum() or letter == ' ' or letter == '(' or letter == ')' or letter == "," or letter == ".":
                 list.append(letter)
             else:
                 list.append("")
-        return ''.join(list)
+        return ''.join(list).strip()
 
     def get_title(self):  
         '''
