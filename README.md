@@ -4,34 +4,19 @@ Simple python script which downloads Bandcamp albums and songs in mp3 format. MP
 
 # The Script in Action
 ### Running the script
-```powershell
-C:\bandcampdownload> python main.py -u https://wolfgang-amadeus-mozart.bandcamp.com/album/mozarts-piano-sonatas-vol-1
+```bash
+$ bcdl https://wolfgang-amadeus-mozart.bandcamp.com/album/mozarts-requiem-instrumental
 Getting MP3 links...
-Getting album cover from: https://f4.bcbits.com/img/a3050325896_16.jpg
-Downloading...
-Downloading... Piano Sonata No.1 in C-Major, K. 279- I. Allegro 
-Downloading... Piano Sonata No.1 in C-Major, K. 279- II. Andante 
-Downloading... Piano Sonata No.1 in C-Major, K. 279- III. Allegro 
-Downloading... Piano Sonata No.2 in F-Major, K. 280- I. Allegro Assai 
-Downloading... Piano Sonata No.2 in F-Major, K. 280- II. Adagio 
-Downloading... Piano Sonata No.2 in F-Major, K. 280- III. Presto 
-Success!
-...
+Getting album cover from: https://f4.bcbits.com/img/a2608013838_16.jpg
+Downloading Album: Mozarts Requiem  Instrumental: 100%|██████████████████████████████████████████| 12/12 [00:05<00:00,  2.06it/s] 100%|████████████████████████████████████████████████████████████████████████████████████████████| 12/12 [00:05<00:00,  2.06it/s] Download Success!
 ```
 
 ### The mp3 files and album cover downloaded with correct metadata
 <img src='images\album.png'></img>
 
-
-
 ### Example of uploading to YoutTube Music using <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a> 
 ```powershell
-Ｓｅｅｄ ＡＩ.mp3 Upload Result: STATUS_SUCCEEDED
-Ｓｉｍｕｌａｔｉｏｎ Ｈｙｐｏｔｈｅｓｉｓ.mp3 Upload Result: STATUS_SUCCEEDED
-Ｔｅｃｈｎｏｌｏｇｉｃａｌ Ｓｉｎｇｕｌａｒｉｔｙ.mp3 Upload Result: STATUS_SUCCEEDED
-Ｔｕｒｉｎｇ Ｍａｃｈｉｎｅ.mp3 Upload Result: <Response [503]>
-Waiting 10 seconds...
-Ｔｕｒｉｎｇ Ｍａｃｈｉｎｅ.mp3 Upload Result: STATUS_SUCCEEDED
+Folder C:/Music/Mozarts Requiem Instrumnetal: 100%|██████████████████████████████████████████████████████| 13/13 [00:21<00:00,  1.68s/it]
 Upload Success!
 ```
 

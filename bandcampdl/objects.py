@@ -3,6 +3,7 @@ from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRC
 import requests 
 import os 
 import sys 
+from tqdm.auto import tqdm, trange
 
 
 class linkfinder:  
@@ -170,13 +171,15 @@ class downloader(meta_info):
                 f.write(cover_response.content)
 
 
-            print(f"Downloading Album: {meta_info.get_title(self)}")
-            for i in range(len(self.download_list)):
+
+            downloadRange = trange(len(self.download_list))  
+            for i in tqdm(downloadRange, position=0, leave=True):
+                downloadRange.set_description(f"Downloading Album: {meta_info.get_title(self)}")
                 filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
                 filename = f"{filepath}.mp3"
                 track = self.download_list[i].strip('"')
                 response = requests.get(track)
-                print(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
+                #tqdm.write(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
 
                 # installing the song  to the intended directory 
                 with open(filename, 'wb') as f:  

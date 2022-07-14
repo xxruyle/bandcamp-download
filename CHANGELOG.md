@@ -1,9 +1,14 @@
 # Change Log 
 
+## v2.0.0 - July 13, 2022
+#### tqdm 
+- Contains all changes and bugfixes from 1.0.1-1.0.3
+- tqdm support 
+
 ## v1.0.3 
 #### Unicode 
 - Fixed problem where extra whitespaces would appear in folder names 
-- 
+
 ## v1.0.2 
 #### Argparse
 
@@ -20,7 +25,7 @@
 - upload_songs() method in youtube_music.py 
 
 
-## v1.0.0 - April 23, 2022
+# v1.0.0 - April 23, 2022
 #### Initial release 
 
 - Added ability to download the album cover to directory folder alongside the MP3s 
