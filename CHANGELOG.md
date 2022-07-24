@@ -7,6 +7,7 @@
   - Updated readme
   - Changed tqdm  
   - Added ability to overwrite existing albums in the directory 
+  - Added alive_progress and removed tqdm 
 
 # v2.0.0 - July 13, 2022
 #### tqdm 

@@ -1,3 +1,4 @@
+from alive_progress import alive_bar
 from ytmusicapi import YTMusic
 from os import listdir 
 from tqdm import tqdm 
@@ -21,18 +22,20 @@ class YTM_upload():
         :returns: Song1.mp3 Upload Result: STATUS_SUCCEED
         ... 
         '''
-        for song in tqdm(listdir(album_folder), desc=f"Uploading Folder {album_folder}", leave=True):  
-            if song[-4:] == ".mp3":  # Makes sure non mp3 files do not get uploaded
-                upload_status = str(self.ytmusic.upload_song(f"{album_folder}/{song}"))
-
-                #If a response error occurs, the script will wait 20 seconds
-                if upload_status == "<Response [503]>" or upload_status == "<Response [409]>":
-                    upload_error = True 
-                    while upload_error:
-                        print("\nWaiting 20 seconds due to rate limit...")
-                        time.sleep(20)
-                        upload_status = self.ytmusic.upload_song(f"{album_folder}/{song}")
-                        if str(upload_status) == "STATUS_SUCCEEDED":
-                            upload_error = False
+        with alive_bar(len(listdir(album_folder)), title=f"Uploading Folder {album_folder}") as bar: 
+            for song in listdir(album_folder):  
+                if song[-4:] == ".mp3":  # Makes sure non mp3 files do not get uploaded
+                    upload_status = str(self.ytmusic.upload_song(f"{album_folder}/{song}"))
+    
+                    #If a response error occurs, the script will wait 20 seconds
+                    if upload_status == "<Response [503]>" or upload_status == "<Response [409]>":
+                        upload_error = True 
+                        while upload_error:
+                            print("\nWaiting 20 seconds due to rate limit...")
+                            time.sleep(20)
+                            upload_status = self.ytmusic.upload_song(f"{album_folder}/{song}")
+                            if str(upload_status) == "STATUS_SUCCEEDED":
+                                upload_error = False
+                bar() #Updates alive progress bar 
                 
         print("Upload Success!")
