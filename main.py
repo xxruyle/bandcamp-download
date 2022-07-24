@@ -4,9 +4,7 @@ import argparse
 
 sys.stdout.reconfigure(encoding='utf-8')  # Fixes git bash crashes
 
-# Customize the main function however you like by using the methods found in objects.py or youtube_music.py
 
-# This main() function downloads songs taken from bandcamp and adds the corresponding metadata to each one
 def main(link):
     ''' Customize the main function however you like by using the methods found in objects.py or youtube_music.py 
         This main() function downloads songs taken from bandcamp and adds the corresponding metadata to each one.
@@ -19,7 +17,8 @@ def main(link):
     # dl.download downloads the songs from the inputted link 
     album_folder = dl.download()    
 
-    # Remove this if you do not want to upload songs to YT Music 
+
+    # Uploading to youtube music 
     if args.upload:
         u1 = bandcampdl.YTM_upload(bandcampdl.HEADERS_AUTH)
         u1.upload_songs(album_folder)

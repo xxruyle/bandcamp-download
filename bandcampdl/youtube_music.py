@@ -21,19 +21,17 @@ class YTM_upload():
         :returns: Song1.mp3 Upload Result: STATUS_SUCCEED
         ... 
         '''
-        for song in tqdm(listdir(album_folder), desc=f"Uploading Folder {album_folder}", position=0, leave=True):  
-            if ".mp3" in song:  # Makes sure non mp3 files do not get uploaded
+        for song in tqdm(listdir(album_folder), desc=f"Uploading Folder {album_folder}", leave=True):  
+            if song[-4:] == ".mp3":  # Makes sure non mp3 files do not get uploaded
                 upload_status = str(self.ytmusic.upload_song(f"{album_folder}/{song}"))
-                #print(song + " Upload Result: " + upload_status)
 
                 #If a response error occurs, the script will wait 20 seconds
                 if upload_status == "<Response [503]>" or upload_status == "<Response [409]>":
                     upload_error = True 
                     while upload_error:
-                        print("Waiting 20 seconds due to rate limit...")
+                        print("\nWaiting 20 seconds due to rate limit...")
                         time.sleep(20)
                         upload_status = self.ytmusic.upload_song(f"{album_folder}/{song}")
-                        #print(song + " Post Wait Result: " + str(upload_status))
                         if str(upload_status) == "STATUS_SUCCEEDED":
                             upload_error = False
                 

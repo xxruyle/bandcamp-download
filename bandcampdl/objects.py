@@ -1,7 +1,9 @@
+from logging import exception
 from bs4 import BeautifulSoup
 from mutagen.id3 import ID3, ID3NoHeaderError, TIT2, TALB, TPE1, TPE2, TDRC, TRCK, APIC, TCON, TPUB
 import requests 
 import os 
+from shutil import rmtree 
 import sys 
 from tqdm.auto import tqdm, trange
 
@@ -18,8 +20,7 @@ class linkfinder:
             soup = BeautifulSoup(response, 'html.parser')
             return soup
         except requests.exceptions.MissingSchema:
-            print("Not a valid link")
-            sys.exit()
+            raise exception("Not a valid link")
 
     def get_script(self):  # gets the text from <script>s
         try:
@@ -28,8 +29,7 @@ class linkfinder:
             links = soup.find_all("script")
             return links 
         except requests.exceptions.MissingSchema:
-            print("Not a valid link")
-            sys.exit()
+            raise exception("Not a valid link")
 
     def get_links(self):
         link_list = []  # list of all the song links 
@@ -72,7 +72,7 @@ class meta_info(linkfinder):
     def cleanString(self, string):  
         list = []
         for letter in string:
-            if letter.isalnum() or letter == ' ' or letter == '(' or letter == ')' or letter == "," or letter == ".":
+            if letter.isalnum() or letter in [' ', '(', ')', ',', '.']:
                 list.append(letter)
             else:
                 list.append("")
@@ -87,8 +87,7 @@ class meta_info(linkfinder):
             title = self.badchar(init_title)
             return self.cleanString(title)
         except AttributeError:
-            print("Not a valid bandcamp link")
-            sys.exit()
+            raise exception("Not a valid bandcamp link")
 
     def get_artist(self):  
         '''
@@ -163,59 +162,55 @@ class downloader(meta_info):
 
     def download(self):
         '''Downloads the mp3 files to the directory as well as adds metadata to each mp3 file'''
-        if not os.path.exists(self.directory):
-            os.makedirs(self.directory)
-            print(f'Getting album cover from: {meta_info.get_cover(self)}')
-            with open(f'{self.directory}/cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
-                cover_response = requests.get(meta_info.get_cover(self))
-                f.write(cover_response.content)
+        if os.path.exists(self.directory):
+            answer = input(f'A directory with the same name already exists: {self.directory}\nWould you like to delete it? (Y/N)').upper()
+            if answer == "Y":
+                rmtree(self.directory)
+            else: 
+                sys.exit()
+        
+        os.makedirs(self.directory)
+
+        print(f'Getting album cover from: {meta_info.get_cover(self)}')
+        with open(f'{self.directory}/cover.jpg', 'wb') as f:  # adding album cover to album/song directory folder
+            cover_response = requests.get(meta_info.get_cover(self))
+            f.write(cover_response.content)
+        downloadRange = trange(len(self.download_list))  
+        for i in tqdm(downloadRange, leave=True):
+            downloadRange.set_description(f"Downloading Album: {meta_info.get_title(self)}")
+            filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
+            filename = f"{filepath}.mp3"
+            track = self.download_list[i].strip('"')
+            response = requests.get(track)
+
+            # installing the song  to the intended directory 
+            with open(filename, 'wb') as f:  
+                f.write(response.content)
+            # Adding mp3 metadata to the file 
+            try:
+                meta = ID3(filename)
+            except ID3NoHeaderError:
+                meta = ID3()
+            meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
+            meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
+            meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
+            meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
+            meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
+            meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
+            meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
+            meta['TPUB'] = TPUB(encoding=3, text=[meta_info.get_publisher(self)]) # publisher/label
+            meta.save(filename)
+            with open(f'{self.directory}/cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
+                meta['APIC'] = APIC(
+                      encoding=3,
+                      mime='image/jpeg',
+                      type=3, desc=u'Cover',
+                      data=albumart.read()
+                    )
+            meta.save(filename)
+        print("Download Success!")
 
 
-
-            downloadRange = trange(len(self.download_list))  
-            for i in tqdm(downloadRange, position=0, leave=True):
-                downloadRange.set_description(f"Downloading Album: {meta_info.get_title(self)}")
-                filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
-                filename = f"{filepath}.mp3"
-                track = self.download_list[i].strip('"')
-                response = requests.get(track)
-                #tqdm.write(f"Downloading... {list(meta_info.get_trackname(self))[i]} ")
-
-                # installing the song  to the intended directory 
-                with open(filename, 'wb') as f:  
-                    f.write(response.content)
-
-                # Adding mp3 metadata to the file 
-                try:
-                    meta = ID3(filename)
-                except ID3NoHeaderError:
-                    meta = ID3()
-
-                meta['TRCK'] = TRCK(encoding=3, text=[meta_info.get_trackname(self)[list(meta_info.get_trackname(self))[i]]])  # track number
-                meta['TIT2'] = TIT2(encoding=3, text=[list(meta_info.get_trackname(self))[i]])  # track name  
-                meta['TCON'] = TCON(encoding=3, text=[meta_info.get_genre(self)]) #genre 
-                meta['TPE1'] = TPE1(encoding=3, text=[meta_info.get_artist(self)]) #contributing artist 
-                meta['TPE2'] = TPE2(encoding=3, text=[meta_info.get_artist(self)]) #album artist
-                meta['TALB'] = TALB(encoding=3, text=[meta_info.get_title(self)]) # album name
-                meta['TDRC'] = TDRC(encoding=3, text=[meta_info.get_release(self)]) # date of year 
-                meta['TPUB'] = TPUB(encoding=3, text=[meta_info.get_publisher(self)]) # publisher/label
-
-                meta.save(filename)
-
-                with open(f'{self.directory}/cover.jpg', 'rb') as albumart:  # Adding album cover to the ID3 
-                    meta['APIC'] = APIC(
-                          encoding=3,
-                          mime='image/jpeg',
-                          type=3, desc=u'Cover',
-                          data=albumart.read()
-                        )
-
-                meta.save(filename)
-
-            print("Download Success!")
-
-        else:
-            print(f'{self.directory} already exists ')
 
         return self.directory # returns the music album folder so we access the mp3 files 
 

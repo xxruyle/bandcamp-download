@@ -1,6 +1,14 @@
 # Change Log 
 
-## v2.0.0 - July 13, 2022
+# v2.0.1 
+- July 24, 2022  
+  - Improved error handling 
+  - Removed unnecessary main.py comments
+  - Updated readme
+  - Changed tqdm  
+  - Added ability to overwrite existing albums in the directory 
+
+# v2.0.0 - July 13, 2022
 #### tqdm 
 - Contains all changes and bugfixes from 1.0.1-1.0.3
 - tqdm support 
