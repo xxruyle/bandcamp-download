@@ -122,8 +122,13 @@ class meta_info(linkfinder):
         for i in container:
             init_track = i.find('span', class_='track-title').text.strip()
             track = self.badchar(init_track) 
-            trackinfo[self.cleanString(track)] = j
+            name = self.cleanString(track) 
+            if name in trackinfo: # if two songs have the same name then we use the track number as the name
+                name = f'{j}' 
+
+            trackinfo[name] = j 
             j += 1
+
         return trackinfo
 
     def get_release(self):  
@@ -178,8 +183,9 @@ class downloader(meta_info):
             cover_response = requests.get(meta_info.get_cover(self))
             f.write(cover_response.content)
 
+
         with alive_bar(len(self.download_list), title=f"Downloading {meta_info.get_title(self)}") as bar: 
-            for i in range(len(self.download_list)):
+            for i in range(len(self.download_list)):  
                 filepath = f"{self.directory}/{list(meta_info.get_trackname(self))[i]}"
                 filename = f"{filepath}.mp3"
                 track = self.download_list[i].strip('"')
