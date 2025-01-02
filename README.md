@@ -36,19 +36,21 @@ Upload Success!
 ```
 
 # Setup
-1) Install the requirements in the project directory
+1) Setup and activate a virtual environment 
+
+2) Install the requirements in the project directory
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-2) Set your preferred directory path where you want your music installed to  `.\bandcampdl\pathdir.py`  
+3) Set your preferred directory path where you want your music installed to  `.\bandcampdl\pathdir.py`  
 
 ```python
-MUSIC_DIRECTORY = "C:\Music"  # Default directory
+MUSIC_DIRECTORY = "./music"  # Default directory is in project base directory 
 ```
 
-3) run `python main.py [-h] [-u] link` 
+4) run `python main.py [-h] [-u] link` 
 
 # Uploading to Youtube Music
 This script supports  <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a> where you can instantly upload songs to Youtube Music after downloading.
@@ -63,3 +65,4 @@ This script supports  <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi
 - Yes, bandcamp allows people to download <a href="https://get.bandcamp.help/hc/en-us/articles/360007902173-I-heard-you-can-steal-music-on-Bandcamp-What-are-you-doing-about-this-">the underlying MP3-128 files</a>
 
 - Support bandcamp artists!
+- There may be rate limits if used too much 

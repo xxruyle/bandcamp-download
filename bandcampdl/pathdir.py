@@ -3,5 +3,5 @@ import os
 dirname = os.path.dirname(__file__)
 headersauth = os.path.join(dirname, "headers_auth.json")
 
-PATH = "C:/Music"  
+PATH = "./music"  
 HEADERS_AUTH = headersauth
